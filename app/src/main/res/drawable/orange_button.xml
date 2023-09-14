@@ -3,3 +3,4 @@
     <solid android:color="@color/orange"/> <!-- Use @color to reference color resource -->
     <corners android:radius="10dp" /> <!-- Adjust the corner radius as needed -->
 </shape>
+
