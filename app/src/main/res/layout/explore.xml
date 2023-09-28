@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/fragment"
+
+    <include layout="@layout/map"
+        android:id="@+id/map_container"
         android:layout_width="match_parent"
         android:layout_height="550dp"
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toTopOf="@+id/explore_observation_icon" />
-
     <ImageView
         android:id="@+id/explore_observation_icon"
         android:layout_width="60dp"
@@ -48,7 +48,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragment"
+        app:layout_constraintBottom_toTopOf="@+id/map_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="FeatherFinder"
-        app:layout_constraintBottom_toTopOf="@+id/fragment"
+        app:layout_constraintBottom_toTopOf="@+id/map_container"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
