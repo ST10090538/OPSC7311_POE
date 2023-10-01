@@ -6,12 +6,27 @@
     android:layout_height="match_parent">
 
 
-    <include layout="@layout/map"
+    <include
         android:id="@+id/map_container"
+        layout="@layout/map"
         android:layout_width="match_parent"
         android:layout_height="550dp"
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toTopOf="@+id/explore_observation_icon" />
+
+    <Button
+        android:id="@+id/start_navigation_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="Start Navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.824"
+        tools:ignore="MissingConstraints" />
+
     <ImageView
         android:id="@+id/explore_observation_icon"
         android:layout_width="60dp"

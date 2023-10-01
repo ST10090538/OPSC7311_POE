@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
 
-        val exploreButton = findViewById<Button>(R.id.button) // Replace with the ID of your button
+        val exploreButton = findViewById<Button>(R.id.button)
         exploreButton.setOnClickListener {
             val intent = Intent(this, ExploreActivity::class.java)
             startActivity(intent)
