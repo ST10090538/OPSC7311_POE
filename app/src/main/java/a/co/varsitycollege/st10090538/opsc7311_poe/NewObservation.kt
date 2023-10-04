@@ -6,27 +6,20 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
-class Preferences : AppCompatActivity() {
-    companion object {
-        var unitsOfMeasurments: String = "metric"
-        var maxDistance: String = "10"
-    }
+class NewObservation: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings)
+        setContentView(R.layout.new_observation)
 
-        val observeIcon = findViewById<ImageView>(R.id.imageView8)
-        val exploreIcon = findViewById<ImageView>(R.id.imageView6)
-
+        val observeIcon = findViewById<ImageView>(R.id.imageView4)
+        val settingsIcon = findViewById<ImageView>(R.id.imageView2)
+        val submitButton = findViewById<Button>(R.id.newObservation_submit)
 
         observeIcon.setOnClickListener {
             startActivity(Intent(this, Observations::class.java))
         }
-        exploreIcon.setOnClickListener {
-            startActivity(Intent(this, ExploreActivity::class.java))
+        settingsIcon.setOnClickListener {
+            startActivity(Intent(this, Preferences::class.java))
         }
     }
-
 }
-
-

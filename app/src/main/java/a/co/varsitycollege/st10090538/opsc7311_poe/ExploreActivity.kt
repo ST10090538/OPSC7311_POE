@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -49,6 +50,21 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.explore)
+
+        val observeIcon = findViewById<ImageView>(R.id.explore_observation_icon)
+        val settingsIcon = findViewById<ImageView>(R.id.explore_settings_icon)
+        val newObservation = findViewById<ImageView>(R.id.explore_newObservation_icon)
+
+        observeIcon.setOnClickListener {
+            startActivity(Intent(this, Observations::class.java))
+        }
+               settingsIcon.setOnClickListener {
+            startActivity(Intent(this, Preferences::class.java))
+        }
+
+        newObservation.setOnClickListener {
+            startActivity(Intent(this, NewObservation::class.java))
+        }
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
