@@ -52,6 +52,7 @@
                 android:layout_gravity="center"/>
 
             <EditText
+                android:id="@+id/txtLocation"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -73,6 +74,7 @@
                 android:layout_marginTop="30dp"/>
 
             <EditText
+                android:id="@+id/txtBirdName"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -94,6 +96,7 @@
                 android:layout_marginTop="30dp"/>
 
             <EditText
+                android:id="@+id/txtBirdCount"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -115,14 +118,15 @@
                 android:layout_marginTop="30dp"/>
 
             <EditText
+                android:id="@+id/txtDescription"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:textAlignment="center"
-                android:background="@drawable/light_grey_background"
-                android:textColor="@color/black"
-                android:textSize="30sp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:background="@drawable/light_grey_background"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
 
             <TextView
                 android:layout_width="300dp"
