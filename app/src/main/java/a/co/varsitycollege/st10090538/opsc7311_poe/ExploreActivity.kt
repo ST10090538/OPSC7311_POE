@@ -133,13 +133,21 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
                     .title(element.name)
             )
         for(element in GlobalData.observations)
+            if(element.image!=null){
+                map?.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(element.lat, element.lng))
+                        .title(element.name)
+                        .icon(BitmapDescriptorFactory.fromBitmap(element.image!!)))
+            }
+        else{
             map?.addMarker(
                 MarkerOptions()
                     .position(LatLng(element.lat, element.lng))
                     .title(element.name)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+            }
 
-        )
     }
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.applicationContext,

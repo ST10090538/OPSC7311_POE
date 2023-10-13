@@ -143,7 +143,7 @@ class NewObservation : AppCompatActivity() {
                 if (task.isSuccessful) {
                     GlobalData.lastKnownLocation = task.result
                     val observation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
-                        birdName, desc, count)
+                        birdName, desc, count, imgPicture)
                     // Save the observation to a list in global data class
                     GlobalData.observations.add(observation)
                     Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
