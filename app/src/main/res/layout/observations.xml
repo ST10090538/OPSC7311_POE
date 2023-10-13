@@ -68,7 +68,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+              <ImageView
 
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -119,14 +119,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/orangeye" />
 
-    <ImageView
-        android:id="@+id/imageView12"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView6"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back" />
 </androidx.constraintlayout.widget.ConstraintLayout>
