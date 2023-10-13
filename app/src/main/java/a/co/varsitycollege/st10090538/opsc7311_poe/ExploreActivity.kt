@@ -24,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -40,8 +41,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var locationPermissionGranted = true
     private var map: GoogleMap? = null
-    private var cameraPosition: CameraPosition? = null
-    private var lastKnownLocation: Location? = null
+    private var lastKnownLocation: Location? = GlobalData.lastKnownLocation
     private val defaultLocation = LatLng(-26.195246, 28.034088)
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var currentPolyline: Polyline? = null
@@ -77,7 +77,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         getLocationPermission()
-        getDeviceLocation(map!!)
+        getDeviceLocation()
         updateLocationUI()
         val startNavigationButton = findViewById<Button>(R.id.start_navigation_button)
         startNavigationButton.visibility = View.INVISIBLE
@@ -132,6 +132,14 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
                     .position(LatLng(element.lat, element.log))
                     .title(element.name)
             )
+        for(element in GlobalData.observations)
+            map?.addMarker(
+                MarkerOptions()
+                    .position(LatLng(element.lat, element.lng))
+                    .title(element.name)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+
+        )
     }
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.applicationContext,
@@ -179,7 +187,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
         }
     }
     @SuppressLint("MissingPermission")
-    private fun getDeviceLocation(googleMap: GoogleMap) {
+    private fun getDeviceLocation() {
         try {
             if (locationPermissionGranted) {
                 val locationResult = fusedLocationProviderClient.lastLocation
@@ -187,6 +195,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
                     if (task.isSuccessful) {
                         lastKnownLocation = task.result
                         if (lastKnownLocation != null) {
+                            GlobalData.lastKnownLocation = lastKnownLocation
                             map?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                 LatLng(lastKnownLocation!!.latitude,
                                     lastKnownLocation!!.longitude), 15.toFloat()))

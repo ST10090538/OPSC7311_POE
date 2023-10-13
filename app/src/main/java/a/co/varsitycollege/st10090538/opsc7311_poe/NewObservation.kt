@@ -15,7 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.content.DialogInterface
+import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class NewObservation : AppCompatActivity() {
     companion object {
@@ -25,7 +28,7 @@ class NewObservation : AppCompatActivity() {
     }
 
     private var imgPicture: Bitmap? = null
-
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +49,6 @@ class NewObservation : AppCompatActivity() {
             startActivity(Intent(this, ExploreActivity::class.java))
         }
 
-        val location = findViewById<EditText>(R.id.txtLocation).text.toString()
-        val birdName = findViewById<EditText>(R.id.txtBirdName).text.toString()
-        val birdCount = findViewById<EditText>(R.id.txtBirdCount).text.toString().toIntOrNull() ?: 0
-        val description = findViewById<EditText>(R.id.txtDescription).text.toString()
         val addPictureButton = findViewById<ImageView>(R.id.newobservation_upload_image)
         val backButton = findViewById<ImageView>(R.id.imageView)
 
@@ -59,14 +58,12 @@ class NewObservation : AppCompatActivity() {
         }
 
         submitButton.setOnClickListener {
-            // Create an Observation object
-            val observation = Observation(location, birdName, birdCount, description)
-            // Save the observation to a list in global data class
-            GlobalData.observations.add(observation)
-
-            startActivity(Intent(this, ExploreActivity::class.java))
-
-            Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
+            val location = findViewById<EditText>(R.id.txtLocation).text.toString()
+            val birdName = findViewById<EditText>(R.id.txtBirdName).text.toString()
+            val birdCount = findViewById<EditText>(R.id.txtBirdCount).text.toString().toIntOrNull() ?: 0
+            val description = findViewById<EditText>(R.id.txtDescription).text.toString()
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+            getDeviceLocation(birdName, birdCount, description)
         }
             addPictureButton.setOnClickListener {
             showPictureDialog()
@@ -138,5 +135,25 @@ class NewObservation : AppCompatActivity() {
         val addPictureButton = findViewById<ImageView>(R.id.newobservation_upload_image)
         addPictureButton.background = null
         addPictureButton.setImageBitmap(imgPicture)
+    }
+    private fun getDeviceLocation(birdName: String, count: Int?, desc: String?) {
+        try {
+            val locationResult = fusedLocationProviderClient.lastLocation
+            locationResult.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    GlobalData.lastKnownLocation = task.result
+                    val observation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
+                        birdName, desc, count)
+                    // Save the observation to a list in global data class
+                    GlobalData.observations.add(observation)
+                    Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, ExploreActivity::class.java))
+                } else {
+
+                }
+            }
+        } catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+        }
     }
 }
