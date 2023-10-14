@@ -186,14 +186,18 @@ class Preferences : AppCompatActivity() {
 
 
     private fun updateButtonColors() {
+        val orangeColor = ContextCompat.getColor(this, R.color.orange)
+        val greyColor = ContextCompat.getColor(this, R.color.light_grey)
+
         if (unitsOfMeasurement == "km") {
-            kmButton.setBackgroundResource(R.drawable.selected_button_background)
-            mButton.setBackgroundResource(R.drawable.unselected_button_background)
+            kmButton.setBackgroundColor(orangeColor)
+            mButton.setBackgroundColor(greyColor)
         } else {
-            kmButton.setBackgroundResource(R.drawable.unselected_button_background)
-            mButton.setBackgroundResource(R.drawable.selected_button_background)
+            kmButton.setBackgroundColor(greyColor)
+            mButton.setBackgroundColor(orangeColor)
         }
     }
+
 
     private fun updateDistanceLabels() {
         if (unitsOfMeasurement == "km") {
