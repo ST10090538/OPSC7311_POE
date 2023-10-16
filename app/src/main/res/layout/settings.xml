@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="100dp"
-                    android:backgroundTint="@color/orange"
+
                     android:text="KM"
                     android:textColor="@color/black" />
 
@@ -186,7 +186,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:backgroundTint="@color/material_on_primary_disabled"
+
                     android:text="M"
                     android:textColor="@color/black" />
 
