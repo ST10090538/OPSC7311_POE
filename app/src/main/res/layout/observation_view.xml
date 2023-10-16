@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:text="Song Bird"
+                    android:text=""
                     android:textAlignment="center"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -71,6 +71,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/birdImage"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
@@ -92,11 +93,12 @@
                     android:textSize="30sp" />
 
                 <EditText
+                    android:id="@+id/txtLocation"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:text="Brackenhurst"
+                    android:text=""
                     android:background="@drawable/light_grey_background"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -115,11 +117,12 @@
                     android:textSize="30sp" />
 
                 <EditText
+                    android:id="@+id/txtCount"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:text="5"
+                    android:text=""
                     android:background="@drawable/light_grey_background"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -137,17 +140,19 @@
                     android:textSize="30sp" />
 
                 <EditText
+                    android:id="@+id/txtDescription"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:text="Goodluck to you all"
+                    android:text=""
                     android:background="@drawable/light_grey_background"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="30sp" />
 
                 <Button
+                    android:id="@+id/updateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
