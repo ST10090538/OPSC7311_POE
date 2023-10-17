@@ -2,6 +2,7 @@ package a.co.varsitycollege.st10090538.opsc7311_poe
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Button
@@ -12,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.internal.ViewUtils.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Date
-
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 class Observations: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +49,7 @@ class Observations: AppCompatActivity() {
 
     private fun createObservationLayout(observation: Observation, observationNumber: Int): LinearLayout {
         val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
+        layout.orientation = LinearLayout.HORIZONTAL
 
         val layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -54,7 +57,6 @@ class Observations: AppCompatActivity() {
         )
         layoutParams.setMargins(0, dpToPx(10), 0, dpToPx(12))
 
-        // Set the background color based on the observationNumber
         val backgroundColorResource = if (observationNumber % 2 == 0) {
             R.color.white
         } else {
@@ -68,61 +70,67 @@ class Observations: AppCompatActivity() {
         numberTextView.text = observationNumber.toString()
         numberTextView.textSize = 24f
         numberTextView.setTextColor(Color.BLACK)
+        numberTextView.setTypeface(null, Typeface.BOLD)
 
         val numberLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
+
         )
-        numberLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
+        numberLayoutParams.gravity = Gravity.CENTER_VERTICAL
+        numberLayoutParams.marginStart = dpToPx(20)
         numberTextView.layoutParams = numberLayoutParams
 
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
-        val currentDate = dateFormat.format(Date())
-
-        val birdNameTextView = TextView(this)
-        birdNameTextView.text = observation.name
-        birdNameTextView.textSize = 22f
-        birdNameTextView.setTextColor(Color.BLACK)
-
-        val nameLayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        nameLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
-        birdNameTextView.layoutParams = nameLayoutParams
-
         val birdImageView = ImageView(this)
-        birdImageView.setImageBitmap(observation.image)
+
+        // Loads image with Glide and applies rounded corners
+        Glide.with(this)
+            .load(observation.image)
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(dpToPx(25)))
+                .override(dpToPx(100), dpToPx(100)))
+            .into(birdImageView)
 
         val imageLayoutParams = LinearLayout.LayoutParams(
             dpToPx(70),
             dpToPx(70)
         )
-        imageLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
-        imageLayoutParams.setMargins(0, dpToPx(10), 0, 0)
+        imageLayoutParams.gravity = Gravity.CENTER_VERTICAL
+        imageLayoutParams.setMargins(35, 15, dpToPx(20), 15)
         birdImageView.layoutParams = imageLayoutParams
 
+        val observationDetailsLayout = LinearLayout(this)
+        observationDetailsLayout.orientation = LinearLayout.VERTICAL
+        // Display bird count
+        val birdCountTextView = TextView(this)
+        birdCountTextView.text = "Spotted: ${observation.count}"
+        birdCountTextView.textSize = 18f
+        birdCountTextView.setTextColor(Color.BLACK)
+
+        //Display Bird Name
+        val birdNameTextView = TextView(this)
+        birdNameTextView.text = observation.name
+        birdNameTextView.textSize = 22f
+        birdNameTextView.setTextColor(Color.BLACK)
+        birdNameTextView.setTypeface(null, Typeface.BOLD)
+
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
+        val currentDate = dateFormat.format(Date())
+        //Display Date when observation is created
         val birdNameDateTextView = TextView(this)
-        val birdNameDateText = "$currentDate"
-        birdNameDateTextView.text = birdNameDateText
+        birdNameDateTextView.text = "$currentDate"
         birdNameDateTextView.textSize = 18f
         birdNameDateTextView.setTextColor(Color.BLACK)
 
-        val dateLayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        dateLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
-        birdNameDateTextView.layoutParams = dateLayoutParams
+        observationDetailsLayout.addView(birdCountTextView)
+        observationDetailsLayout.addView(birdNameTextView)
+        observationDetailsLayout.addView(birdNameDateTextView)
 
         layout.addView(numberTextView)
         layout.addView(birdImageView)
-        layout.addView(birdNameTextView)
-        layout.addView(birdNameDateTextView)
+        layout.addView(observationDetailsLayout)
 
         return layout
     }
-
     private fun dpToPx(dp: Int): Int {
         val density = resources.displayMetrics.density
         return (dp * density).toInt()

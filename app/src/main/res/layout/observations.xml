@@ -7,25 +7,27 @@
     android:background="@color/white">
 
 
-<TextView
+    <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginTop="28dp"
         android:gravity="center_horizontal"
-        android:text="Observations"
-        android:textSize="40sp"
+        android:text="O B S E R V A T I O N S"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.723"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="500dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView10"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.19"
+        app:layout_constraintVertical_bias="0.084"
         tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
