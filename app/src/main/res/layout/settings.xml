@@ -7,14 +7,16 @@
     android:background="@color/white">
 
 
-<TextView
+    <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="135dp"
-        android:text="Settings"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="56dp"
+        android:text="S E T T I N G S"
+        android:textColor="#000000"
         android:textSize="40sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,9 +24,9 @@
         android:id="@+id/imageView"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toStartOf="@+id/textView6"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
