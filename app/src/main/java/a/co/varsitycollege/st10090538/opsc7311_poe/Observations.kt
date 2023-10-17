@@ -53,13 +53,21 @@ class Observations: AppCompatActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         layoutParams.setMargins(0, dpToPx(10), 0, dpToPx(12))
+
+        // Set the background color based on the observationNumber
+        val backgroundColorResource = if (observationNumber % 2 == 0) {
+            R.color.white
+        } else {
+            R.color.orange
+        }
+        layout.setBackgroundResource(backgroundColorResource)
+
         layout.layoutParams = layoutParams
 
         val numberTextView = TextView(this)
         numberTextView.text = observationNumber.toString()
         numberTextView.textSize = 24f
         numberTextView.setTextColor(Color.BLACK)
-
 
         val numberLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
