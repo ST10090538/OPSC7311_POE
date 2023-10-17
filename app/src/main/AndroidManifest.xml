@@ -48,6 +48,12 @@
 
         <activity android:name=".Preferences"></activity>
 
+        <activity android:name=".LoginPage"></activity>
+
+        <activity android:name=".RegisterPage"></activity>
+
+
+
     </application>
 
 </manifest>

@@ -80,7 +80,7 @@
         tools:ignore="LabelFor" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/Loginbutton"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_password_input" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/RegisterButton"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -109,6 +109,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/Loginbutton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
