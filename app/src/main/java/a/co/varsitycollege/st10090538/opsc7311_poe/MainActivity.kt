@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         val click = findViewById<View>(R.id.WelcomePage)
         click.setOnClickListener {
-            startActivity(Intent(this, LoginPage::class.java))
+            startActivity(Intent(this, ExploreActivity::class.java))
         }
     }
 }

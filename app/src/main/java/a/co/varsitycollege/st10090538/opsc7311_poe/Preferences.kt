@@ -1,8 +1,8 @@
 package a.co.varsitycollege.st10090538.opsc7311_poe
 
 import a.co.varsitycollege.st10090538.opsc7311_poe.NewObservation.Companion.CAMERA_PERMISSION_REQUEST_CODE
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -11,17 +11,17 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
+import kotlin.math.roundToInt
 
 class Preferences : AppCompatActivity() {
     companion object {
         var unitsOfMeasurement: String = "km"
-        var maxDistance: Int = 100
+        var maxDistance: String = "10"
 
         const val PICK_IMAGE_REQUEST = 1
         const val REQUEST_IMAGE_CAPTURE = 2
@@ -32,8 +32,10 @@ class Preferences : AppCompatActivity() {
     private lateinit var seekBar: SeekBar
     private lateinit var minDistanceLabel: TextView
     private lateinit var maxDistanceLabel: TextView
+    private lateinit var selectedValue: TextView
     private var imgPicture: Bitmap? = null
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
@@ -43,6 +45,7 @@ class Preferences : AppCompatActivity() {
         seekBar = findViewById(R.id.seekBar)
         minDistanceLabel = findViewById(R.id.min_distance_label)
         maxDistanceLabel = findViewById(R.id.max_distance_label)
+        selectedValue = findViewById(R.id.selectedDistanceLabel)
         val addPictureButton = findViewById<ImageView>(R.id.user_upload_image)
         val observeIcon = findViewById<ImageView>(R.id.imageView8)
         val exploreIcon = findViewById<ImageView>(R.id.imageView6)
@@ -55,27 +58,37 @@ class Preferences : AppCompatActivity() {
             startActivity(Intent(this, ExploreActivity::class.java))
         }
         backButton.setOnClickListener {
-            // Navigate back to the Explore page
             startActivity(Intent(this, ExploreActivity::class.java))
         }
 
         updateButtonColors()
         updateDistanceLabels()
 
-        seekBar.max = 100  // Set max to 100 (kilometers) initially
+        seekBar.max = 50
+        seekBar.progress = maxDistance.toInt()
+        if(unitsOfMeasurement == "km"){
+            selectedValue.text = "${maxDistance}${unitsOfMeasurement}"
+        }
+        else{
+            selectedValue.text = "${(maxDistance.toDouble() / 1.609).roundToInt()}${unitsOfMeasurement}"
+        }
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                maxDistance = progress
-                updateDistanceLabels()
+                GlobalData.hotspotList.clear()
+                maxDistance = progress.toString()
+                if(unitsOfMeasurement == "km"){
+                    selectedValue.text = "${progress.toString()}${unitsOfMeasurement}"
+                }
+                else{
+                    selectedValue.text = "${(progress / 1.609).roundToInt()}${unitsOfMeasurement}"
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Not needed
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Not needed
             }
         })
         addPictureButton.setOnClickListener {
@@ -89,17 +102,11 @@ class Preferences : AppCompatActivity() {
         }
 
         mButton.setOnClickListener {
-            unitsOfMeasurement = "m"
+            unitsOfMeasurement = "mi"
             updateButtonColors()
             updateDistanceLabels()
         }
 
-        val updateButton = findViewById<Button>(R.id.update_button)
-        updateButton.setOnClickListener {
-            updateMaxDistance()
-            saveSettingsToSharedPreferences()
-            Toast.makeText(this, "Settings updated", Toast.LENGTH_SHORT).show()
-        }
     }
 
     //Allows the user to choose how to add a picture
@@ -202,25 +209,14 @@ class Preferences : AppCompatActivity() {
     private fun updateDistanceLabels() {
         if (unitsOfMeasurement == "km") {
             minDistanceLabel.text = "0 km"
-            maxDistanceLabel.text = "$maxDistance km"
+            maxDistanceLabel.text = "50 km"
+            selectedValue.text = "${maxDistance.toString()}km"
         } else {
-            minDistanceLabel.text = "0 m"
-            maxDistanceLabel.text = "${maxDistance * 1000} m"
+            minDistanceLabel.text = "0 mi"
+            maxDistanceLabel.text = (50 / 1.609).roundToInt().toString() + " mi"
+            selectedValue.text = "${(maxDistance.toDouble() / 1.609).roundToInt()}mi"
         }
     }
 
-    private fun updateMaxDistance() {
-        if (unitsOfMeasurement == "m") {
-            maxDistance *= 1000
-        }
-    }
-
-    private fun saveSettingsToSharedPreferences() {
-        val preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putString("unitsOfMeasurement", unitsOfMeasurement)
-        editor.putInt("maxDistance", maxDistance)
-        editor.apply()
-    }
 }
 

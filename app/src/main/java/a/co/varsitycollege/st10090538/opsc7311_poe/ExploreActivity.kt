@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import android.net.Uri
@@ -132,22 +133,24 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
                     .position(LatLng(element.lat, element.log))
                     .title(element.name)
             )
-        for(element in GlobalData.observations)
-            if(element.image!=null){
+        for (element in GlobalData.observations) {
+            if (element.image != null) {
+                val scaledBitmap = Bitmap.createScaledBitmap(element.image!!, 180, 180, true)
                 map?.addMarker(
                     MarkerOptions()
                         .position(LatLng(element.lat, element.lng))
                         .title(element.name)
-                        .icon(BitmapDescriptorFactory.fromBitmap(element.image!!)))
+                        .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap))
+                )
+            } else {
+                map?.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(element.lat, element.lng))
+                        .title(element.name)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                )
             }
-        else{
-            map?.addMarker(
-                MarkerOptions()
-                    .position(LatLng(element.lat, element.lng))
-                    .title(element.name)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
-            }
-
+        }
     }
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.applicationContext,

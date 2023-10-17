@@ -32,6 +32,7 @@
         app:srcCompat="@drawable/back" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_marginTop="10dp"
@@ -256,19 +257,18 @@
                         android:textSize="25sp" />
 
                 </LinearLayout>
-            </LinearLayout>
 
-            <Button
-                android:id="@+id/update_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:backgroundTint="@color/orange"
-                android:text="Update"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                app:cornerRadius="10dp" />
+                <TextView
+                    android:id="@+id/selectedDistanceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="0km"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -305,4 +305,5 @@
         app:layout_constraintEnd_toStartOf="@+id/imageView6"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/greyeye" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
