@@ -58,13 +58,43 @@ class NewObservation : AppCompatActivity() {
         }
 
         submitButton.setOnClickListener {
-            val location = findViewById<EditText>(R.id.txtLocation).text.toString()
-            val birdName = findViewById<EditText>(R.id.txtBirdName).text.toString()
-            val birdCount = findViewById<EditText>(R.id.txtBirdCount).text.toString().toIntOrNull() ?: 0
-            val description = findViewById<EditText>(R.id.txtDescription).text.toString()
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-            getDeviceLocation(birdName, birdCount, description)
-        }
+            val locationEditText = findViewById<EditText>(R.id.txtLocation)
+            val birdNameEditText = findViewById<EditText>(R.id.txtBirdName)
+            val birdCountEditText = findViewById<EditText>(R.id.txtBirdCount)
+            val descriptionEditText = findViewById<EditText>(R.id.txtDescription)
+
+            val location = locationEditText.text.toString()
+            val birdName = birdNameEditText.text.toString()
+            val birdCountText = birdCountEditText.text.toString()
+            val description = descriptionEditText.text.toString()
+
+            //Implemented exception handling for the following fields:
+            if (location.isBlank()) {
+                locationEditText.error = "Location is required!"
+                return@setOnClickListener
+            }
+
+            if (birdName.isBlank()) {
+                birdNameEditText.error = "Bird name is required!"
+                return@setOnClickListener
+            }
+
+            if (birdCountText.isBlank()) {
+                birdCountEditText.error = "Bird count is required!"
+                return@setOnClickListener
+            }
+            val birdCount = birdCountText.toIntOrNull() ?: 0
+
+            if (imgPicture == null) {
+
+                Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            // If all fields are valid then save the observation
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+                getDeviceLocation(birdName, birdCount, description)
+            }
+
             addPictureButton.setOnClickListener {
             showPictureDialog()
         }
