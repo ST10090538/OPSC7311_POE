@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OPSC7311_POE</string>
+    <string name="app_name">FeatherFinder</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="password">Password</string>
