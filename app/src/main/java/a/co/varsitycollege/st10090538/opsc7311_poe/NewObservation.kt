@@ -19,6 +19,11 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.Firebase
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 
 class NewObservation : AppCompatActivity() {
     companion object {
@@ -173,9 +178,29 @@ class NewObservation : AppCompatActivity() {
                 if (task.isSuccessful) {
                     GlobalData.lastKnownLocation = task.result
                     val observation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
-                        birdName, desc, count, imgPicture)
+                        birdName, desc, count, imgPicture, null)
                     // Save the observation to a list in global data class
                     GlobalData.observations.add(observation)
+                    val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+                    val userRef = database.getReference(GlobalData.userID)
+                    val observationRef = userRef.child("observations").push()
+                    if(observation.image == null){
+                        observationRef.setValue(observation)
+                    }
+                    else{
+                        val stream = ByteArrayOutputStream()
+                        observation.image.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                        val imageData = stream.toByteArray()
+
+                        val storageRef = FirebaseStorage.getInstance().reference
+                        val observationImageRef = storageRef.child("${GlobalData.userID}/observationImages/${observationRef.key}")
+                        observationImageRef.putBytes(imageData)
+
+                        val tempObservation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
+                            birdName, desc, count, null, "${GlobalData.userID}/observationImages/${observationRef.key}")
+
+                        observationRef.setValue(tempObservation)
+                    }
                     Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, ExploreActivity::class.java))
                 } else {

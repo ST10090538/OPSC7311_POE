@@ -6,4 +6,6 @@ object GlobalData {
     val hotspotList = mutableListOf<Hotspot>()
     val observations = mutableListOf<Observation>()
     var lastKnownLocation: Location? = null
+    var userID: String = "testUser"
+    var updateMap: Boolean = false
 }
