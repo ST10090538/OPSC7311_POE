@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -27,6 +29,7 @@ class LoginPage : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     private val storageRef = FirebaseStorage.getInstance().reference
+    private var loggedIn = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +44,7 @@ class LoginPage : AppCompatActivity() {
         registerpage_register_button.setOnClickListener {
             startActivity(Intent(this, RegisterPage::class.java))
         }
+
 
 
         loginpage_login_button.setOnClickListener {
@@ -61,8 +65,8 @@ class LoginPage : AppCompatActivity() {
                         // User login successful
                         Toast.makeText(this, "Logged In Successfully!", Toast.LENGTH_SHORT).show()
                         GlobalData.userID = firebaseAuth.currentUser?.uid.toString()
-
-                        val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+                        GlobalData.username = username
+                        val database = com.google.firebase.Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
                         val observationReference = database.getReference(GlobalData.userID).child("observations")
                         var wait = false
 
@@ -110,8 +114,34 @@ class LoginPage : AppCompatActivity() {
 
                         }
                         observationReference.addValueEventListener(observationListener)
-                        startActivity(Intent(this, ExploreActivity::class.java))
-                        finish()
+                        val unitsRef = database.getReference(GlobalData.userID).child("preferences").child("unitsOfMeasurement")
+                        val maxDistanceRef = database.getReference(GlobalData.userID).child("preferences").child("maxDistance")
+                        maxDistanceRef.addValueEventListener(object: ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val value = snapshot.getValue<String>()
+                                if(value != null){
+                                    Preferences.maxDistance = value
+                                }
+                                unitsRef.addValueEventListener(object: ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val value = snapshot.getValue<String>()
+                                        if(value!=null){
+                                            Preferences.unitsOfMeasurement = value
+                                        }
+                                        if(!loggedIn){
+                                            loggedIn = true
+                                            startAct()
+                                        }
+                                    }
+                                    override fun onCancelled(error: DatabaseError) {
+                                        startAct()
+                                    }
+                                })
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                                startAct()
+                            }
+                        })
 
                     } else {
                         // User login failed
@@ -120,6 +150,10 @@ class LoginPage : AppCompatActivity() {
                     }
                 }
         }
+    }
+    private fun startAct(){
+        startActivity(Intent(this, ExploreActivity::class.java))
+        finish()
     }
 }
 

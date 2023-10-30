@@ -16,6 +16,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import kotlin.math.roundToInt
@@ -49,10 +55,13 @@ class Preferences : AppCompatActivity() {
         minDistanceLabel = findViewById(R.id.min_distance_label)
         maxDistanceLabel = findViewById(R.id.max_distance_label)
         selectedValue = findViewById(R.id.selectedDistanceLabel)
+        var usernameLabel = findViewById<TextView>(R.id.usernameLabel)
         val addPictureButton = findViewById<ImageView>(R.id.user_upload_image)
         val observeIcon = findViewById<ImageView>(R.id.imageView8)
         val exploreIcon = findViewById<ImageView>(R.id.imageView6)
         val backButton = findViewById<ImageView>(R.id.imageView)
+
+        usernameLabel.text = GlobalData.username
 
         if(GlobalData.profilePic != null){
             addPictureButton.setImageBitmap(GlobalData.profilePic)
@@ -95,6 +104,7 @@ class Preferences : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 GlobalData.hotspotList.clear()
                 maxDistance = progress.toString()
+                updatePreferences()
                 if(unitsOfMeasurement == "km"){
                     selectedValue.text = "${progress.toString()}${unitsOfMeasurement}"
                 }
@@ -115,16 +125,29 @@ class Preferences : AppCompatActivity() {
 
         kmButton.setOnClickListener {
             unitsOfMeasurement = "km"
+            updatePreferences()
             updateButtonColors()
             updateDistanceLabels()
         }
 
         mButton.setOnClickListener {
             unitsOfMeasurement = "mi"
+            updatePreferences()
             updateButtonColors()
             updateDistanceLabels()
         }
 
+    }
+
+    private fun updatePreferences(){
+        val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+        val userRef = database.getReference(GlobalData.userID)
+        userRef.child("preferences").child("unitsOfMeasurement").setValue(
+            unitsOfMeasurement
+        )
+        userRef.child("preferences").child("maxDistance").setValue(
+            maxDistance
+        )
     }
 
     //Allows the user to choose how to add a picture

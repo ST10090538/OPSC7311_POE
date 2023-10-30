@@ -10,4 +10,5 @@ object GlobalData {
     var userID: String = "testUser"
     var updateMap: Boolean = false
     var profilePic: Bitmap? = null
+    var username = "Username"
 }
