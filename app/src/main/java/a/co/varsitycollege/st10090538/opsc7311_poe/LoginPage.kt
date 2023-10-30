@@ -67,6 +67,7 @@ class LoginPage : AppCompatActivity() {
                         GlobalData.userID = firebaseAuth.currentUser?.uid.toString()
                         GlobalData.username = username
                         val database = com.google.firebase.Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+
                         val observationReference = database.getReference(GlobalData.userID).child("observations")
                         var wait = false
 
@@ -130,7 +131,42 @@ class LoginPage : AppCompatActivity() {
                                         }
                                         if(!loggedIn){
                                             loggedIn = true
-                                            startAct()
+                                            val achievementsRef = database.getReference(GlobalData.userID)
+                                            val achievementsListener = object: ValueEventListener{
+                                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                    if(dataSnapshot.hasChild("Achievements")){
+                                                        Achievements.firstLogin =
+                                                            dataSnapshot.child("Achievements").child("firstLogin").value as Boolean
+                                                        Achievements.completeUserProfile =
+                                                            dataSnapshot.child("Achievements").child("completeUserProfile").value as Boolean
+                                                        Achievements.firstObservation =
+                                                            dataSnapshot.child("Achievements").child("firstObservation").value as Boolean
+                                                        Achievements.milestone10 =
+                                                            dataSnapshot.child("Achievements").child("milestone10").value as Boolean
+                                                        Achievements.milestone20 =
+                                                            dataSnapshot.child("Achievements").child("milestone20").value as Boolean
+                                                        Achievements.milestone30 =
+                                                            dataSnapshot.child("Achievements").child("milestone30").value as Boolean
+
+                                                        if(!Achievements.firstLogin){
+                                                            achievementsRef.child("Achievements").child("firstLogin").setValue(true)
+                                                            Achievements.firstLogin = true
+                                                            Toast.makeText(this@LoginPage, "Achievement unlocked!\nFirst LOGIN", Toast.LENGTH_SHORT).show()
+                                                        }
+                                                        startAct()
+                                                    }
+                                                    else{
+                                                        achievementsRef.child("Achievements").setValue(Achievements)
+                                                        startAct()
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+
+                                                }
+
+                                            }
+                                            achievementsRef.addValueEventListener(achievementsListener)
                                         }
                                     }
                                     override fun onCancelled(error: DatabaseError) {

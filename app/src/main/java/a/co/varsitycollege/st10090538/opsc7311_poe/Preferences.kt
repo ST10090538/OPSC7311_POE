@@ -228,6 +228,13 @@ class Preferences : AppCompatActivity() {
                     storageRef.child("${GlobalData.userID}/profilePic/profile.jpg")
 
                 profileImageRef.putBytes(imageData)
+
+                if(!Achievements.completeUserProfile){
+                    Achievements.completeUserProfile = true
+                    val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+                    val achievementsRef = database.getReference(GlobalData.userID)
+                    achievementsRef.child("Achievements").child("completeUserProfile").setValue(true)
+                }
             }
         }
     }

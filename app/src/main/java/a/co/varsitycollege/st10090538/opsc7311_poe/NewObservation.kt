@@ -90,12 +90,6 @@ class NewObservation : AppCompatActivity() {
             }
             val birdCount = birdCountText.toIntOrNull() ?: 0
 
-            if (imgPicture == null) {
-
-                Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            // If all fields are valid then save the observation
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 getDeviceLocation(birdName, birdCount, description)
             }
@@ -202,6 +196,29 @@ class NewObservation : AppCompatActivity() {
                         observationRef.setValue(tempObservation)
                     }
                     Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
+                    if(!Achievements.firstObservation){
+                        Achievements.firstObservation = true
+
+                        val achievementsRef = database.getReference(GlobalData.userID)
+                        achievementsRef.child("Achievements").child("firstObservation").setValue(true)
+                    }
+                    if(GlobalData.observations.count() >= 10){
+                        if(!Achievements.milestone10){
+                            Achievements.milestone10 = true
+                            val achievementsRef = database.getReference(GlobalData.userID)
+                            achievementsRef.child("Achievements").child("milestone10").setValue(true)
+                        }
+                        if(!Achievements.milestone20){
+                            Achievements.milestone20 = true
+                            val achievementsRef = database.getReference(GlobalData.userID)
+                            achievementsRef.child("Achievements").child("milestone20").setValue(true)
+                        }
+                        if(!Achievements.milestone30){
+                            Achievements.milestone30 = true
+                            val achievementsRef = database.getReference(GlobalData.userID)
+                            achievementsRef.child("Achievements").child("milestone30").setValue(true)
+                        }
+                    }
                     startActivity(Intent(this, ExploreActivity::class.java))
                 } else {
 
