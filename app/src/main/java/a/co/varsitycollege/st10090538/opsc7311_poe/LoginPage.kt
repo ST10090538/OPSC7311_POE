@@ -69,7 +69,6 @@ class LoginPage : AppCompatActivity() {
                         val database = com.google.firebase.Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
 
                         val observationReference = database.getReference(GlobalData.userID).child("observations")
-                        var wait = false
 
                         val observationListener = object : ValueEventListener{
                             override fun onDataChange(snapshot: DataSnapshot) {
@@ -129,9 +128,7 @@ class LoginPage : AppCompatActivity() {
                                         if(value!=null){
                                             Preferences.unitsOfMeasurement = value
                                         }
-                                        if(!loggedIn){
-                                            loggedIn = true
-                                            val achievementsRef = database.getReference(GlobalData.userID)
+                                            val achievementsRef = database.getReference(GlobalData.userID).child("Achievements")
                                             val achievementsListener = object: ValueEventListener{
                                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                     if(dataSnapshot.hasChild("Achievements")){
@@ -153,7 +150,11 @@ class LoginPage : AppCompatActivity() {
                                                             Achievements.firstLogin = true
                                                             Toast.makeText(this@LoginPage, "Achievement unlocked!\nFirst LOGIN", Toast.LENGTH_SHORT).show()
                                                         }
-                                                        startAct()
+                                                        if(!loggedIn){
+                                                            startAct()
+                                                            loggedIn = true
+                                                        }
+
                                                     }
                                                     else{
                                                         achievementsRef.child("Achievements").setValue(Achievements)
@@ -167,7 +168,7 @@ class LoginPage : AppCompatActivity() {
 
                                             }
                                             achievementsRef.addValueEventListener(achievementsListener)
-                                        }
+
                                     }
                                     override fun onCancelled(error: DatabaseError) {
                                         startAct()
