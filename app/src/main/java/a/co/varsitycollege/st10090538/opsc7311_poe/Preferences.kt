@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import kotlin.math.roundToInt
 
@@ -34,6 +36,7 @@ class Preferences : AppCompatActivity() {
     private lateinit var maxDistanceLabel: TextView
     private lateinit var selectedValue: TextView
     private var imgPicture: Bitmap? = null
+    private val storageRef = FirebaseStorage.getInstance().reference
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +53,21 @@ class Preferences : AppCompatActivity() {
         val observeIcon = findViewById<ImageView>(R.id.imageView8)
         val exploreIcon = findViewById<ImageView>(R.id.imageView6)
         val backButton = findViewById<ImageView>(R.id.imageView)
+
+        if(GlobalData.profilePic != null){
+            addPictureButton.setImageBitmap(GlobalData.profilePic)
+        }
+
+        val profileImageRef = storageRef.child("${GlobalData.userID}/profilePic/profile.jpg")
+        val MAX_SIZE_BYTES: Long = 1024 * 1024
+        profileImageRef.getBytes(MAX_SIZE_BYTES).addOnSuccessListener { imageData ->
+            val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+            // Use the bitmap as needed
+            imgPicture = bitmap
+            GlobalData.profilePic = imgPicture
+            updateImageIcon()
+        }.addOnFailureListener {
+        }
 
         observeIcon.setOnClickListener {
             startActivity(Intent(this, Observations::class.java))
@@ -174,14 +192,19 @@ class Preferences : AppCompatActivity() {
 
                 REQUEST_IMAGE_CAPTURE -> {
                     imgPicture = data?.extras?.get("data") as Bitmap
-                    if (imgPicture != null) {
-                        // Convert bitmap to byte array
-                        val stream = ByteArrayOutputStream()
-                        imgPicture?.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        val imageData = stream.toByteArray()
-                        updateImageIcon()
-                    }
+                    updateImageIcon()
                 }
+            }
+            if(imgPicture != null){
+                val stream = ByteArrayOutputStream()
+                imgPicture?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val imageData = stream.toByteArray()
+
+                val storageRef = FirebaseStorage.getInstance().reference
+                val profileImageRef =
+                    storageRef.child("${GlobalData.userID}/profilePic/profile.jpg")
+
+                profileImageRef.putBytes(imageData)
             }
         }
     }

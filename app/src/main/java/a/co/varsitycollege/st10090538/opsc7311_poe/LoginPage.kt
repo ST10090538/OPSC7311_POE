@@ -82,7 +82,6 @@ class LoginPage : AppCompatActivity() {
                                             var img: Bitmap? = null
                                             val observationImageRef = storageRef.child(imgUrl)
                                             val MAX_SIZE_BYTES: Long = 1024 * 1024
-                                            observationImageRef
                                             observationImageRef.getBytes(MAX_SIZE_BYTES).addOnSuccessListener { imageData ->
                                                 val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
                                                 // Use the bitmap as needed
@@ -91,11 +90,13 @@ class LoginPage : AppCompatActivity() {
                                                 GlobalData.observations.add(observation)
                                                 GlobalData.updateMap = true
                                             }.addOnFailureListener {
+                                                val int = 1;
                                             }
                                         }
                                         else{
                                             val observation = Observation(lng, lat, name, desc, count, null, null)
                                             GlobalData.observations.add(observation)
+                                            GlobalData.updateMap = true
                                         }
 
                                     }
