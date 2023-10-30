@@ -128,7 +128,7 @@ class LoginPage : AppCompatActivity() {
                                         if(value!=null){
                                             Preferences.unitsOfMeasurement = value
                                         }
-                                            val achievementsRef = database.getReference(GlobalData.userID).child("Achievements")
+                                            val achievementsRef = database.getReference(GlobalData.userID)
                                             val achievementsListener = object: ValueEventListener{
                                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                     if(dataSnapshot.hasChild("Achievements")){
