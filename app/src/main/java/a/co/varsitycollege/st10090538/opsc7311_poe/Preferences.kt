@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
@@ -15,6 +16,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
+import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import kotlin.math.roundToInt
 
@@ -34,6 +42,7 @@ class Preferences : AppCompatActivity() {
     private lateinit var maxDistanceLabel: TextView
     private lateinit var selectedValue: TextView
     private var imgPicture: Bitmap? = null
+    private val storageRef = FirebaseStorage.getInstance().reference
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +55,28 @@ class Preferences : AppCompatActivity() {
         minDistanceLabel = findViewById(R.id.min_distance_label)
         maxDistanceLabel = findViewById(R.id.max_distance_label)
         selectedValue = findViewById(R.id.selectedDistanceLabel)
+        var usernameLabel = findViewById<TextView>(R.id.usernameLabel)
         val addPictureButton = findViewById<ImageView>(R.id.user_upload_image)
         val observeIcon = findViewById<ImageView>(R.id.imageView8)
         val exploreIcon = findViewById<ImageView>(R.id.imageView6)
         val backButton = findViewById<ImageView>(R.id.imageView)
+
+        usernameLabel.text = GlobalData.username
+
+        if(GlobalData.profilePic != null){
+            addPictureButton.setImageBitmap(GlobalData.profilePic)
+        }
+
+        val profileImageRef = storageRef.child("${GlobalData.userID}/profilePic/profile.jpg")
+        val MAX_SIZE_BYTES: Long = 1024 * 1024
+        profileImageRef.getBytes(MAX_SIZE_BYTES).addOnSuccessListener { imageData ->
+            val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+            // Use the bitmap as needed
+            imgPicture = bitmap
+            GlobalData.profilePic = imgPicture
+            updateImageIcon()
+        }.addOnFailureListener {
+        }
 
         observeIcon.setOnClickListener {
             startActivity(Intent(this, Observations::class.java))
@@ -77,6 +104,7 @@ class Preferences : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 GlobalData.hotspotList.clear()
                 maxDistance = progress.toString()
+                updatePreferences()
                 if(unitsOfMeasurement == "km"){
                     selectedValue.text = "${progress.toString()}${unitsOfMeasurement}"
                 }
@@ -97,16 +125,29 @@ class Preferences : AppCompatActivity() {
 
         kmButton.setOnClickListener {
             unitsOfMeasurement = "km"
+            updatePreferences()
             updateButtonColors()
             updateDistanceLabels()
         }
 
         mButton.setOnClickListener {
             unitsOfMeasurement = "mi"
+            updatePreferences()
             updateButtonColors()
             updateDistanceLabels()
         }
 
+    }
+
+    private fun updatePreferences(){
+        val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+        val userRef = database.getReference(GlobalData.userID)
+        userRef.child("preferences").child("unitsOfMeasurement").setValue(
+            unitsOfMeasurement
+        )
+        userRef.child("preferences").child("maxDistance").setValue(
+            maxDistance
+        )
     }
 
     //Allows the user to choose how to add a picture
@@ -174,13 +215,25 @@ class Preferences : AppCompatActivity() {
 
                 REQUEST_IMAGE_CAPTURE -> {
                     imgPicture = data?.extras?.get("data") as Bitmap
-                    if (imgPicture != null) {
-                        // Convert bitmap to byte array
-                        val stream = ByteArrayOutputStream()
-                        imgPicture?.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        val imageData = stream.toByteArray()
-                        updateImageIcon()
-                    }
+                    updateImageIcon()
+                }
+            }
+            if(imgPicture != null){
+                val stream = ByteArrayOutputStream()
+                imgPicture?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val imageData = stream.toByteArray()
+
+                val storageRef = FirebaseStorage.getInstance().reference
+                val profileImageRef =
+                    storageRef.child("${GlobalData.userID}/profilePic/profile.jpg")
+
+                profileImageRef.putBytes(imageData)
+
+                if(!Achievements.completeUserProfile){
+                    Achievements.completeUserProfile = true
+                    val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+                    val achievementsRef = database.getReference(GlobalData.userID)
+                    achievementsRef.child("Achievements").child("completeUserProfile").setValue(true)
                 }
             }
         }

@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 
 class RegisterPage : AppCompatActivity() {
@@ -17,11 +18,12 @@ class RegisterPage : AppCompatActivity() {
     private lateinit var editTextTextPassword: EditText
     private lateinit var editTextTextPassword2: EditText
     private lateinit var registerpage_register_button: Button
-
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register)
+        firebaseAuth = FirebaseAuth.getInstance()
 
         editText2 = findViewById(R.id.UsernameRegister)
         editTextTextPassword = findViewById(R.id.editTextTextPassword)
@@ -58,20 +60,26 @@ class RegisterPage : AppCompatActivity() {
             // validation for passwords to match
             if (password != confpass) {
                 editTextTextPassword2.error = "Password does not match!"
+                return@setOnClickListener
             }
             // validation if passwords match
-            if (password == confpass) {
+            firebaseAuth.createUserWithEmailAndPassword(username, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // User registration successful
+                        Toast.makeText(this, "Registered Successfully!", Toast.LENGTH_SHORT).show()
 
-                Toast.makeText(this, "Registered Successfully!", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, LoginPage::class.java)
-                intent.putExtra("username", username)
-                intent.putExtra("password", password)
-                startActivity(intent)
-                finish()
-            } else {
-                editTextTextPassword2.error = "Password does not match!"
-            }
+                        val intent = Intent(this, LoginPage::class.java)
+                        intent.putExtra("username", username)
+                        intent.putExtra("password", password)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // User registration failed
+                        Toast.makeText(this, "Registration Failed!", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
         }
     }

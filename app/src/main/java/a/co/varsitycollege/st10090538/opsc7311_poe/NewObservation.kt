@@ -19,6 +19,11 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 
 class NewObservation : AppCompatActivity() {
     companion object {
@@ -85,12 +90,6 @@ class NewObservation : AppCompatActivity() {
             }
             val birdCount = birdCountText.toIntOrNull() ?: 0
 
-            if (imgPicture == null) {
-
-                Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            // If all fields are valid then save the observation
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 getDeviceLocation(birdName, birdCount, description)
             }
@@ -173,10 +172,53 @@ class NewObservation : AppCompatActivity() {
                 if (task.isSuccessful) {
                     GlobalData.lastKnownLocation = task.result
                     val observation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
-                        birdName, desc, count, imgPicture)
+                        birdName, desc, count, imgPicture, null)
                     // Save the observation to a list in global data class
                     GlobalData.observations.add(observation)
+                    val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
+                    val userRef = database.getReference(GlobalData.userID)
+                    val observationRef = userRef.child("observations").push()
+                    if(observation.image == null){
+                        observationRef.setValue(observation)
+                    }
+                    else{
+                        val stream = ByteArrayOutputStream()
+                        observation.image.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                        val imageData = stream.toByteArray()
+
+                        val storageRef = FirebaseStorage.getInstance().reference
+                        val observationImageRef = storageRef.child("${GlobalData.userID}/observationImages/${observationRef.key}")
+                        observationImageRef.putBytes(imageData)
+
+                        val tempObservation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
+                            birdName, desc, count, null, "${GlobalData.userID}/observationImages/${observationRef.key}")
+
+                        observationRef.setValue(tempObservation)
+                    }
                     Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
+                    if(!Achievements.firstObservation){
+                        Achievements.firstObservation = true
+
+                        val achievementsRef = database.getReference(GlobalData.userID)
+                        achievementsRef.child("Achievements").child("firstObservation").setValue(true)
+                    }
+                    if(GlobalData.observations.count() >= 10){
+                        if(!Achievements.milestone10){
+                            Achievements.milestone10 = true
+                            val achievementsRef = database.getReference(GlobalData.userID)
+                            achievementsRef.child("Achievements").child("milestone10").setValue(true)
+                        }
+                        if(!Achievements.milestone20){
+                            Achievements.milestone20 = true
+                            val achievementsRef = database.getReference(GlobalData.userID)
+                            achievementsRef.child("Achievements").child("milestone20").setValue(true)
+                        }
+                        if(!Achievements.milestone30){
+                            Achievements.milestone30 = true
+                            val achievementsRef = database.getReference(GlobalData.userID)
+                            achievementsRef.child("Achievements").child("milestone30").setValue(true)
+                        }
+                    }
                     startActivity(Intent(this, ExploreActivity::class.java))
                 } else {
 
