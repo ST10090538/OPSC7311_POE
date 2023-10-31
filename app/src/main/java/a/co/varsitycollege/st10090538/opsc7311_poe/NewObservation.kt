@@ -173,7 +173,6 @@ class NewObservation : AppCompatActivity() {
                     GlobalData.lastKnownLocation = task.result
                     val observation = Observation(GlobalData.lastKnownLocation!!.longitude, GlobalData.lastKnownLocation!!.latitude,
                         birdName, desc, count, imgPicture, null)
-                    // Save the observation to a list in global data class
                     GlobalData.observations.add(observation)
                     val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
                     val userRef = database.getReference(GlobalData.userID)
@@ -196,29 +195,34 @@ class NewObservation : AppCompatActivity() {
                         observationRef.setValue(tempObservation)
                     }
                     Toast.makeText(this, "Observation Created Successfully", Toast.LENGTH_SHORT).show()
+
                     if(!Achievements.firstObservation){
                         Achievements.firstObservation = true
 
                         val achievementsRef = database.getReference(GlobalData.userID)
                         achievementsRef.child("Achievements").child("firstObservation").setValue(true)
+                        Toast.makeText(this@NewObservation, "Achievement unlocked!\nFirst OBSERVATION", Toast.LENGTH_SHORT).show()
                     }
-                    if(GlobalData.observations.count() >= 10){
-                        if(!Achievements.milestone10){
-                            Achievements.milestone10 = true
-                            val achievementsRef = database.getReference(GlobalData.userID)
-                            achievementsRef.child("Achievements").child("milestone10").setValue(true)
-                        }
-                        if(!Achievements.milestone20){
-                            Achievements.milestone20 = true
-                            val achievementsRef = database.getReference(GlobalData.userID)
-                            achievementsRef.child("Achievements").child("milestone20").setValue(true)
-                        }
-                        if(!Achievements.milestone30){
-                            Achievements.milestone30 = true
-                            val achievementsRef = database.getReference(GlobalData.userID)
-                            achievementsRef.child("Achievements").child("milestone30").setValue(true)
-                        }
+
+                    if(!Achievements.milestone10 && GlobalData.observations.count()>=10){
+                        Achievements.milestone10 = true
+                        val achievementsRef = database.getReference(GlobalData.userID)
+                        achievementsRef.child("Achievements").child("milestone10").setValue(true)
+                        Toast.makeText(this@NewObservation, "Achievement unlocked!\n10 Observations", Toast.LENGTH_SHORT).show()
                     }
+                    if(!Achievements.milestone20 && GlobalData.observations.count()>=20){
+                        Achievements.milestone20 = true
+                        val achievementsRef = database.getReference(GlobalData.userID)
+                        achievementsRef.child("Achievements").child("milestone20").setValue(true)
+                        Toast.makeText(this@NewObservation, "Achievement unlocked!\n20 Observations", Toast.LENGTH_SHORT).show()
+                    }
+                    if(!Achievements.milestone30 && GlobalData.observations.count()>=30){
+                        Achievements.milestone30 = true
+                        val achievementsRef = database.getReference(GlobalData.userID)
+                        achievementsRef.child("Achievements").child("milestone30").setValue(true)
+                        Toast.makeText(this@NewObservation, "Achievement unlocked!\n30 Observations", Toast.LENGTH_SHORT).show()
+                    }
+
                     startActivity(Intent(this, ExploreActivity::class.java))
                 } else {
 

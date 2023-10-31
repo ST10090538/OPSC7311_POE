@@ -90,6 +90,7 @@ class Preferences : AppCompatActivity() {
 
         updateButtonColors()
         updateDistanceLabels()
+        checkAchievements()
 
         seekBar.max = 50
         seekBar.progress = maxDistance.toInt()
@@ -148,6 +149,27 @@ class Preferences : AppCompatActivity() {
         userRef.child("preferences").child("maxDistance").setValue(
             maxDistance
         )
+    }
+
+    private fun checkAchievements(){
+        if(Achievements.firstLogin){
+            findViewById<ImageView>(R.id.imgLoginAch).setImageResource(R.drawable.redbirdcolor)
+        }
+        if(Achievements.firstObservation){
+            findViewById<ImageView>(R.id.imgFirsObservationAch).setImageResource(R.drawable.orangebirdcolor)
+        }
+        if(Achievements.completeUserProfile){
+            findViewById<ImageView>(R.id.imgProfileAch).setImageResource(R.drawable.greenbirdcolor)
+        }
+        if(Achievements.milestone10){
+            findViewById<ImageView>(R.id.imgMilestone10Ach).setImageResource(R.drawable.bluebirdcolor)
+        }
+        if(Achievements.milestone20){
+            findViewById<ImageView>(R.id.imgMilestone20Ach).setImageResource(R.drawable.lightpurplebirdcolor)
+        }
+        if(Achievements.milestone30){
+            findViewById<ImageView>(R.id.imgMilestone30Ach).setImageResource(R.drawable.purplebirdcolor)
+        }
     }
 
     //Allows the user to choose how to add a picture
@@ -234,6 +256,7 @@ class Preferences : AppCompatActivity() {
                     val database = Firebase.database("https://featherfinder-68e61-default-rtdb.europe-west1.firebasedatabase.app/")
                     val achievementsRef = database.getReference(GlobalData.userID)
                     achievementsRef.child("Achievements").child("completeUserProfile").setValue(true)
+                    findViewById<ImageView>(R.id.imgProfileAch).setImageResource(R.drawable.greenbirdcolor)
                 }
             }
         }

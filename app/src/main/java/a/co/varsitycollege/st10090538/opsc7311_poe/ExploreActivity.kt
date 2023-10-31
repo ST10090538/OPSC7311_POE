@@ -155,7 +155,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
             }
         }
         val handler = Handler()
-        val updateInterval = 5000
+        val updateInterval = 8000
 
         val updateMarkersRunnable = object : Runnable {
             override fun run() {

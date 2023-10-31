@@ -72,6 +72,7 @@ class LoginPage : AppCompatActivity() {
 
                         val observationListener = object : ValueEventListener{
                             override fun onDataChange(snapshot: DataSnapshot) {
+                                GlobalData.observations.clear()
                                 for(observationSnapshot in snapshot.children){
                                     val observationMap = observationSnapshot.value as? Map<*, *>
                                     observationMap?.let {
