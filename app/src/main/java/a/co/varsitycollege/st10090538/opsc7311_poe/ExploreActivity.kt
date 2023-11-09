@@ -11,6 +11,7 @@ import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -127,6 +128,8 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
         webhelper.start()
         webhelper.join()
 
+
+
         for(element in GlobalData.hotspotList)
             map?.addMarker(
                 MarkerOptions()
@@ -151,7 +154,43 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
                 )
             }
         }
+        val handler = Handler()
+        val updateInterval = 8000
+
+        val updateMarkersRunnable = object : Runnable {
+            override fun run() {
+                updateMarkers()
+                handler.postDelayed(this, updateInterval.toLong())
+            }
+        }
+        handler.post(updateMarkersRunnable)
     }
+
+    private fun updateMarkers(){
+        if(GlobalData.updateMap){
+            for (element in GlobalData.observations) {
+                if (element.image != null) {
+                    val scaledBitmap = Bitmap.createScaledBitmap(element.image!!, 180, 180, true)
+                    map?.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(element.lat, element.lng))
+                            .title(element.name)
+                            .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap))
+                    )
+                } else {
+                    map?.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(element.lat, element.lng))
+                            .title(element.name)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    )
+                }
+            }
+            GlobalData.updateMap = false
+        }
+    }
+
+
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
