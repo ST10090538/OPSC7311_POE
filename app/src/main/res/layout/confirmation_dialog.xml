@@ -2,13 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/dialog_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Navigate to this location?"
+        android:textColor="@color/black"
         android:textSize="16sp" />
 
     <Button
@@ -17,6 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dialog_message"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/orange"
+        android:textColor="@color/white"
         android:text="Yes" />
 
     <Button
@@ -25,6 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dialog_message"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/orange"
+        android:textColor="@color/white"
         android:layout_toEndOf="@id/confirm_button"
         android:text="No" />
 </RelativeLayout>

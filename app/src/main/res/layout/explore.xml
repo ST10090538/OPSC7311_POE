@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:text="Start Navigation"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/orange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,21 +45,25 @@
         android:id="@+id/explore_settings_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/explore_explore_icon"
+        app:layout_constraintTop_toBottomOf="@+id/map_container"
         app:srcCompat="@drawable/greysettings" />
 
     <ImageView
         android:id="@+id/explore_explore_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/explore_settings_icon"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/explore_observation_icon"
+        app:layout_constraintTop_toBottomOf="@+id/map_container"
         app:srcCompat="@drawable/orangexplore" />
 
     <ImageView
