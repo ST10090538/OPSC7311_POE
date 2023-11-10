@@ -33,24 +33,31 @@
             android:value="AIzaSyDrd4TRfKrboSdVS8C3SSXvmYiICStf3Q8" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ExploreActivity"></activity>
+        <activity android:name=".ExploreActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
 
-        <activity android:name=".NewObservation"></activity>
+        <activity android:name=".NewObservation"
+            android:windowSoftInputMode="adjustPan"></activity>
 
-        <activity android:name=".Observations"></activity>
+        <activity android:name=".Observations"
+            android:windowSoftInputMode="adjustPan"></activity>
 
-        <activity android:name=".Preferences"></activity>
+        <activity android:name=".Preferences"
+            android:windowSoftInputMode="adjustPan"></activity>
 
-        <activity android:name=".LoginPage"></activity>
+        <activity android:name=".LoginPage"
+            android:windowSoftInputMode="adjustPan"></activity>
 
-        <activity android:name=".RegisterPage"></activity>
+        <activity android:name=".RegisterPage"
+            android:windowSoftInputMode="adjustPan"></activity>
 
 
 

@@ -2,10 +2,8 @@ package a.co.varsitycollege.st10090538.opsc7311_poe
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -63,12 +61,11 @@ class RegisterPage : AppCompatActivity() {
                 return@setOnClickListener
             }
             // validation if passwords match
-            firebaseAuth.createUserWithEmailAndPassword(username, password)
+            firebaseAuth.createUserWithEmailAndPassword (username, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // User registration successful
                         Toast.makeText(this, "Registered Successfully!", Toast.LENGTH_SHORT).show()
-
 
                         val intent = Intent(this, LoginPage::class.java)
                         intent.putExtra("username", username)
@@ -79,7 +76,7 @@ class RegisterPage : AppCompatActivity() {
                         // User registration failed
                         Toast.makeText(this, "Registration Failed!", Toast.LENGTH_SHORT).show()
                     }
-                }
+            }
 
         }
     }
