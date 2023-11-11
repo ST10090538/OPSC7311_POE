@@ -9,7 +9,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -18,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -27,9 +27,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
@@ -48,6 +46,9 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var currentPolyline: Polyline? = null
 
+    object BuildConfig {
+        val GOOGLE_MAPS_API_KEY = System.getProperty("google.maps.api.key")!!
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -267,7 +268,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
 
     private fun requestDirections(selectedMarkerLatLng: LatLng) {
         val directionsApi = GeoApiContext.Builder()
-            .apiKey("AIzaSyDrd4TRfKrboSdVS8C3SSXvmYiICStf3Q8")
+            .apiKey(BuildConfig.GOOGLE_MAPS_API_KEY)
             .build()
 
         val origin = "${lastKnownLocation!!.latitude}, ${lastKnownLocation!!.longitude}"
