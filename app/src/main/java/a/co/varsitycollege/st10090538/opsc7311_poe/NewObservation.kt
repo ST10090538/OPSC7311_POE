@@ -94,6 +94,7 @@ class NewObservation : AppCompatActivity() {
                 getDeviceLocation(birdName, birdCount, description)
             }
 
+            GlobalData.updateMap = true
             addPictureButton.setOnClickListener {
             showPictureDialog()
         }

@@ -168,7 +168,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
     }
 
     private fun updateMarkers(){
-        if(GlobalData.updateMap){
+        //if(GlobalData.updateMap){
             for (element in GlobalData.observations) {
                 if (element.image != null) {
                     val scaledBitmap = Bitmap.createScaledBitmap(element.image!!, 180, 180, true)
@@ -188,7 +188,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
                 }
             }
             GlobalData.updateMap = false
-        }
+       // }
     }
 
 

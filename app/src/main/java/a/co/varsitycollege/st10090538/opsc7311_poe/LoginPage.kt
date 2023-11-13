@@ -84,7 +84,7 @@ class LoginPage : AppCompatActivity() {
                                         if(imgUrl!=null){
                                             var img: Bitmap? = null
                                             val observationImageRef = storageRef.child(imgUrl)
-                                            val MAX_SIZE_BYTES: Long = 1024 * 1024
+                                            val MAX_SIZE_BYTES: Long = 1024 * 1024 * 5
                                             observationImageRef.getBytes(MAX_SIZE_BYTES).addOnSuccessListener { imageData ->
                                                 val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
                                                 // Use the bitmap as needed
