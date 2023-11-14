@@ -46,9 +46,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var currentPolyline: Polyline? = null
 
-    object BuildConfig {
-        val GOOGLE_MAPS_API_KEY = System.getProperty("google.maps.api.key")!!
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -268,7 +266,7 @@ class ExploreActivity : AppCompatActivity(), OnMapReadyCallback{
 
     private fun requestDirections(selectedMarkerLatLng: LatLng) {
         val directionsApi = GeoApiContext.Builder()
-            .apiKey(BuildConfig.GOOGLE_MAPS_API_KEY)
+            .apiKey("AIzaSyDrd4TRfKrboSdVS8C3SSXvmYiICStf3Q8")
             .build()
 
         val origin = "${lastKnownLocation!!.latitude}, ${lastKnownLocation!!.longitude}"
